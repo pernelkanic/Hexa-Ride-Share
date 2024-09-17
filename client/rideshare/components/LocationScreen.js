@@ -84,7 +84,7 @@ const LocationScreen = ({ navigation }) => {
         region={{
           latitude: location?.latitude || 37.78825,
           longitude: location?.longitude || -122.4324,
-          latitudeDelta: 0.015, // Smaller delta for a more zoomed-in view
+          latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}
       >
@@ -106,7 +106,7 @@ const LocationScreen = ({ navigation }) => {
       >
         <View style={tw`bg-white rounded-lg p-5 w-80`}>
           <View style={tw`items-center mb-5`}>
-            <Text style={tw`text-5xl`}>📍</Text>
+            <Text style={tw`text-5xl pt-2`}>📍</Text>
           </View>
           <Text style={tw`text-xl font-bold text-center`}>
             Enable your location

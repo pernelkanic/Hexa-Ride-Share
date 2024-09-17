@@ -29,8 +29,8 @@ const Login = () => {
       {/* Blue Background Section */}
       <View
         style={[
-          tw`flex-1 bg-blue-500 justify-center px-5`,
-          { borderBottomLeftRadius: 50, borderBottomRightRadius: 50 },
+          tw`flex-1 bg-blue-600 justify-center px-5`,
+          { borderBottomLeftRadius: 10, borderBottomRightRadius: 200 },
         ]}
       >
         {/* Logo and Welcome Text */}
@@ -38,16 +38,16 @@ const Login = () => {
           style={tw`absolute top-20 left-5 right-5 flex-row justify-between items-center`}
         >
           <View>
-            <Text style={tw`text-white text-lg font-bold mb-2`}>
+            <Text style={tw`text-white text-xs font-bold mb-2`}>
               Login to Continue
             </Text>
-            <Text style={tw`text-white text-3xl font-bold mb-2`}>Welcome!</Text>
+            <Text style={tw`text-white text-2xl font-bold mb-40`}>Welcome!</Text>
           </View>
           <Image
             source={{
               uri: "https://download.logo.wine/logo/Hexaware_Technologies/Hexaware_Technologies-Logo.wine.png",
             }}
-            style={tw`w-20 h-20`}
+            style={tw`w-30 h-25 mb-45`}
           />
         </View>
 
@@ -112,9 +112,9 @@ const Login = () => {
       </View>
 
       {/* White Background Section */}
-      <View style={tw`bg-white pt-5 pb-10 items-center`}>
+      <View style={tw`bg-white pt-5 items-center h-1/4`}>
         <TouchableOpacity
-          style={tw`bg-blue-700 rounded-lg py-4 w-1/2 items-center`}
+          style={tw`bg-blue-700 rounded-lg py-4 mb-15 w-1/3 items-center`}
           onPress={handleLogin}
         >
           <Text style={tw`text-white text-lg font-bold`}>LOGIN</Text>

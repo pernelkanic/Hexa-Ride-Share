@@ -13,19 +13,19 @@ const RoleSelectionScreen = ({ navigation }) => {
   return (
     <View style={tw`flex-1 justify-center items-center bg-white px-4`}>
       <TouchableOpacity
-        style={tw`bg-blue-500 flex-row items-center justify-between px-10 py-4 rounded-lg mb-4 w-80`}
+        style={tw`bg-blue-600 flex-row items-center justify-between px-10 py-4 rounded-lg mb-4 w-80`}
         onPress={() => handleRoleSelect("Rider")}
       >
-        <Text style={tw`text-white text-lg font-bold`}>RIDER</Text>
-        <AntDesign name="rightcircleo" size={24} color="white" />
+        <Text style={tw`text-white text-3xl font-bold`}>RIDER</Text>
+        <AntDesign name="rightcircle" size={35} color="white" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={tw`bg-blue-500 flex-row items-center justify-between px-10 py-4 rounded-lg w-80`}
+        style={tw`bg-blue-600 flex-row items-center justify-between px-10 py-4 rounded-lg w-80`}
         onPress={() => handleRoleSelect("Driver")}
       >
-        <Text style={tw`text-white text-lg font-bold`}>DRIVER</Text>
-        <AntDesign name="rightcircleo" size={24} color="white" />
+        <Text style={tw`text-white text-3xl font-bold`}>DRIVER</Text>
+        <AntDesign name="rightcircle" size={35} color="white" />
       </TouchableOpacity>
     </View>
   );
