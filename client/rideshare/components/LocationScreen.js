@@ -1,68 +1,74 @@
-<<<<<<< HEAD
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Modal from "react-native-modal";
 import tw from "twrnc"; // Tailwind import
 
 const LocationScreen = ({ navigation }) => {
-  // Make sure to receive the navigation prop
   const [modalVisible, setModalVisible] = useState(true);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-=======
-import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import * as Location from 'expo-location';
-import tw from 'twrnc'; // Tailwind import
-
-const LocationScreen = () => {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
   // Request for location permissions and get location automatically
->>>>>>> 0df5e7df0822de25627f86996efbb1ce6c4e39af
   useEffect(() => {
-    (async () => {
+    const fetchLocation = async () => {
       try {
-        // Request foreground location permissions
         const { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          Alert.alert(
+            "Location Error",
+            "Permission to access location was denied"
+          );
           return;
         }
-
-        // Get the current location with higher accuracy
         const { coords } = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
         });
         setLocation(coords);
       } catch (error) {
-        setErrorMsg('Failed to fetch location');
-        Alert.alert("Location Error", errorMsg);
+        console.log("Error fetching location: ", error); // Log error for debugging
+        setErrorMsg("Failed to fetch location");
+        Alert.alert("Location Error", "Failed to fetch location");
       }
-    })();
+    };
+
+    fetchLocation();
   }, []);
 
-<<<<<<< HEAD
   const handleUseLocation = async () => {
-    let currentLocation = await Location.getCurrentPositionAsync({});
-    setLocation(currentLocation.coords);
-    setModalVisible(false);
-    // Navigate to RoleSelectionScreen after location is set
-    navigation.navigate("RoleSelection");
+    console.log("Use My Location button clicked"); // Debugging statement
+
+    try {
+      // Request location
+      const { coords } = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
+      console.log("Location fetched: ", coords); // Log location for debugging
+
+      // Update state and navigate
+      setLocation(coords);
+      setModalVisible(false);
+
+      // Delay navigation to ensure modal state is updated
+      setTimeout(() => {
+        console.log("Navigating to RoleSelection"); // Debugging statement
+        navigation.navigate("RoleSelection");
+      }, 10);
+    } catch (error) {
+      // Error handling
+      console.log("Error fetching location: ", error); // Log error for debugging
+      setErrorMsg("Failed to fetch location");
+      Alert.alert("Location Error", "Failed to fetch location");
+    }
   };
 
   const handleSkip = () => {
     setModalVisible(false);
-    // Navigate to RoleSelectionScreen even if the user skips location
     navigation.navigate("RoleSelection");
   };
-=======
+
   if (!location && !errorMsg) {
     return (
       <View style={tw`flex-1 items-center justify-center`}>
@@ -70,7 +76,6 @@ const LocationScreen = () => {
       </View>
     );
   }
->>>>>>> 0df5e7df0822de25627f86996efbb1ce6c4e39af
 
   return (
     <View style={tw`flex-1`}>
@@ -79,7 +84,7 @@ const LocationScreen = () => {
         region={{
           latitude: location?.latitude || 37.78825,
           longitude: location?.longitude || -122.4324,
-          latitudeDelta: 0.015,  // Smaller delta for a more zoomed-in view
+          latitudeDelta: 0.015, // Smaller delta for a more zoomed-in view
           longitudeDelta: 0.0121,
         }}
       >
@@ -94,7 +99,6 @@ const LocationScreen = () => {
           />
         )}
       </MapView>
-<<<<<<< HEAD
 
       <Modal
         isVisible={modalVisible}
@@ -125,8 +129,6 @@ const LocationScreen = () => {
           </TouchableOpacity>
         </View>
       </Modal>
-=======
->>>>>>> 0df5e7df0822de25627f86996efbb1ce6c4e39af
     </View>
   );
 };
