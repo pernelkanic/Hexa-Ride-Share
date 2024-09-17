@@ -29,8 +29,12 @@ const Login = () => {
       {/* Blue Background Section */}
       <View
         style={[
-          tw`flex-1 bg-blue-600 justify-center px-5`,
-          { borderBottomLeftRadius: 10, borderBottomRightRadius: 200 },
+          tw`flex-1 bg-blue-600 justify-center px-4`,
+          {
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 190,
+            borderTopLeftRadius: 190,
+          },
         ]}
       >
         {/* Logo and Welcome Text */}
@@ -38,10 +42,12 @@ const Login = () => {
           style={tw`absolute top-20 left-5 right-5 flex-row justify-between items-center`}
         >
           <View>
-            <Text style={tw`text-white text-xs font-bold mb-2`}>
-              Login to Continue
+            <Text style={tw`text-white text-xs font-bold `}>
+              Login to Continue..
             </Text>
-            <Text style={tw`text-white text-2xl font-bold mb-40`}>Welcome!</Text>
+            <Text style={tw`text-white text-2xl font-bold mb-40`}>
+              WELCOME!
+            </Text>
           </View>
           <Image
             source={{
@@ -74,7 +80,7 @@ const Login = () => {
 
         {/* Password Input */}
         <View
-          style={tw`flex-row items-center bg-white rounded-lg px-4 py-3 mb-4`}
+          style={tw`flex-row items-center bg-white rounded-lg px-4 py-3 `}
         >
           <MaterialIcons name="lock" size={20} color="black" style={tw`mr-3`} />
           <TextInput
@@ -103,7 +109,7 @@ const Login = () => {
               color="#fff"
               uncheckedColor="#fff"
             />
-            <Text style={tw`text-white ml-2`}>Remember me</Text>
+            <Text style={tw`text-white`}>Remember me</Text>
           </View>
           <TouchableOpacity>
             <Text style={tw`text-white underline`}>Forgot password?</Text>
@@ -112,9 +118,9 @@ const Login = () => {
       </View>
 
       {/* White Background Section */}
-      <View style={tw`bg-white pt-5 items-center h-1/4`}>
+      <View style={tw`bg-white pt-5 items-center h-1/6`}>
         <TouchableOpacity
-          style={tw`bg-blue-700 rounded-lg py-4 mb-15 w-1/3 items-center`}
+          style={tw`bg-blue-600 rounded-lg py-4 mb-5 w-1/2 items-center`}
           onPress={handleLogin}
         >
           <Text style={tw`text-white text-lg font-bold`}>LOGIN</Text>
