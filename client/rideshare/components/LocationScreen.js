@@ -1,40 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
+import * as Location from "expo-location";
+import React, { useEffect, useState } from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from 'expo-location';
-import tw from 'twrnc'; // Tailwind import
+import tw from "twrnc"; // Tailwind import
 
-const LocationScreen = () => {
+const LocationScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  // Request for location permissions and get location automatically
   useEffect(() => {
-    (async () => {
+    const fetchLocation = async () => {
       try {
-        // Request foreground location permissions
         const { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          Alert.alert("Location Error", "Permission to access location was denied");
           return;
         }
-
-        // Get the current location with higher accuracy
         const { coords } = await Location.getCurrentPositionAsync({
           accuracy: Location.Accuracy.High,
         });
         setLocation(coords);
       } catch (error) {
-        setErrorMsg('Failed to fetch location');
-        Alert.alert("Location Error", errorMsg);
+        console.log("Error fetching location: ", error); // Log error for debugging
+        setErrorMsg("Failed to fetch location");
+        Alert.alert("Location Error", "Failed to fetch location");
       }
-    })();
+    };
+
+    fetchLocation();
   }, []);
+
+  const handleNext = () => {
+    navigation.navigate("RoleSelectionScreen"); // Navigate to RoleSelectionScreen
+  };
 
   if (!location && !errorMsg) {
     return (
-      <View style={tw`flex-1 items-center justify-center`}>
+      <View style={tw`flex-1 items-center justify-center text-lg`}>
         <Text>Fetching your location...</Text>
       </View>
     );
@@ -47,7 +50,7 @@ const LocationScreen = () => {
         region={{
           latitude: location?.latitude || 37.78825,
           longitude: location?.longitude || -122.4324,
-          latitudeDelta: 0.015,  // Smaller delta for a more zoomed-in view
+          latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}
       >
@@ -62,6 +65,17 @@ const LocationScreen = () => {
           />
         )}
       </MapView>
+
+      <View style={tw`absolute bottom-0 left-0 right-0 p-4`}>
+        <TouchableOpacity
+          style={tw`bg-blue-600 rounded-lg py-3 items-center`}
+          onPress={handleNext}
+        >
+          <Text style={tw`text-white text-lg font-bold`}>
+            Next
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
