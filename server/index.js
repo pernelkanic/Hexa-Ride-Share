@@ -1,8 +1,8 @@
-const express = require("express");
-const mysql = require("mysql");
-const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const express = require('express');
+const mysql = require('mysql');
+const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -20,19 +20,19 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.error("Error connecting to the database:", err);
+    console.error('Error connecting to the database:', err);
   } else {
-    console.log("Connected to the MySQL database");
+    console.log('Connected to the MySQL database');
   }
 });
 
 // GET request to fetch all available rides
-app.get("/api/rides", (req, res) => {
-  const sqlQuery = "SELECT * FROM rides";
+app.get('/api/rides', (req, res) => {
+  const sqlQuery = 'SELECT * FROM rides';
   db.query(sqlQuery, (err, results) => {
     if (err) {
-      console.error("Error fetching rides:", err);
-      res.status(500).json({ error: "Failed to fetch rides" });
+      console.error('Error fetching rides:', err);
+      res.status(500).json({ error: 'Failed to fetch rides' });
     } else {
       res.json(results);
     }
@@ -40,38 +40,23 @@ app.get("/api/rides", (req, res) => {
 });
 
 // POST request for the driver to create a new ride
-app.post("/api/rides", (req, res) => {
-  const { driver_name, vehicle_info, origin, destination, available_seats } =
-    req.body;
+app.post('/api/rides', (req, res) => {
+  const { driver_name, vehicle_info, origin, destination, available_seats } = req.body;
 
   // Validate the request body
-  if (
-    !driver_name ||
-    !vehicle_info ||
-    !origin ||
-    !destination ||
-    !available_seats
-  ) {
-    return res.status(400).json({ error: "Missing required fields" });
+  if (!driver_name || !vehicle_info || !origin || !destination || !available_seats) {
+    return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const sqlInsert =
-    "INSERT INTO rides (driver_name, vehicle_info, origin, destination, available_seats) VALUES (?, ?, ?, ?, ?)";
-  db.query(
-    sqlInsert,
-    [driver_name, vehicle_info, origin, destination, available_seats],
-    (err, result) => {
-      if (err) {
-        console.error("Error inserting ride:", err);
-        res.status(500).json({ error: "Failed to create ride" });
-      } else {
-        res.status(201).json({
-          message: "Ride created successfully",
-          rideId: result.insertId,
-        });
-      }
+  const sqlInsert = 'INSERT INTO rides (driver_name, vehicle_info, origin, destination, available_seats) VALUES (?, ?, ?, ?, ?)';
+  db.query(sqlInsert, [driver_name, vehicle_info, origin, destination, available_seats], (err, result) => {
+    if (err) {
+      console.error('Error inserting ride:', err);
+      res.status(500).json({ error: 'Failed to create ride' });
+    } else {
+      res.status(201).json({ message: 'Ride created successfully', rideId: result.insertId });
     }
-  );
+  });
 });
 
 // Start the server

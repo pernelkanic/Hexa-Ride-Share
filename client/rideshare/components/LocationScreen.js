@@ -14,10 +14,7 @@ const LocationScreen = ({ navigation }) => {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("Permission to access location was denied");
-          Alert.alert(
-            "Location Error",
-            "Permission to access location was denied"
-          );
+          Alert.alert("Location Error", "Permission to access location was denied");
           return;
         }
         const { coords } = await Location.getCurrentPositionAsync({
@@ -74,7 +71,9 @@ const LocationScreen = ({ navigation }) => {
           style={tw`bg-blue-600 rounded-lg py-3 items-center`}
           onPress={handleNext}
         >
-          <Text style={tw`text-white text-lg font-bold`}>Next</Text>
+          <Text style={tw`text-white text-lg font-bold`}>
+            Next
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
