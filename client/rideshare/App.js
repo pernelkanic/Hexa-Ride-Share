@@ -1,11 +1,12 @@
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "./components/Login";
+import React from "react";
+import DriverHome from "./components/DriverHome"; // Import DriverPage
 import LocationScreen from "./components/LocationScreen";
-import RideShareApp from "./components/RideShareApp";
+import Login from "./components/Login";
 import MapScreen from "./components/MapScreen";
 import ProfilePage from "./components/ProfilePage";
+import RideShareApp from "./components/RideShareApp";
 import RoleSelectionScreen from "./components/RoleSelectionScreen";
 
 const Stack = createStackNavigator();
@@ -25,7 +26,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="RoleSelectionScreen" // Make sure this matches the name used in navigation
+          name="RoleSelectionScreen"
           component={RoleSelectionScreen}
           options={{ headerShown: false }}
         />
@@ -42,6 +43,11 @@ export default function App() {
         <Stack.Screen
           name="Profile"
           component={ProfilePage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DriverHome" // Add this line to register DriverPage
+          component={DriverHome}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
