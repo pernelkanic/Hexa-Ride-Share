@@ -79,9 +79,7 @@ const Login = () => {
         </View>
 
         {/* Password Input */}
-        <View
-          style={tw`flex-row items-center bg-white rounded-lg px-4 py-3 `}
-        >
+        <View style={tw`flex-row items-center bg-white rounded-lg px-4 py-3 `}>
           <MaterialIcons name="lock" size={20} color="black" style={tw`mr-3`} />
           <TextInput
             style={tw`flex-1 text-base text-gray-800`}

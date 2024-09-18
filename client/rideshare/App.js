@@ -1,12 +1,12 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Login from './components/Login';
-import LocationScreen from './components/LocationScreen';
-import RideShareApp from './components/RideShareApp';
-import MapScreen from './components/MapScreen';
-import ProfilePage from './components/ProfilePage';
-import RoleSelectionScreen from './components/RoleSelectionScreen';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import Login from "./components/Login";
+import LocationScreen from "./components/LocationScreen";
+import RideShareApp from "./components/RideShareApp";
+import MapScreen from "./components/MapScreen";
+import ProfilePage from "./components/ProfilePage";
+import RoleSelectionScreen from "./components/RoleSelectionScreen";
 
 const Stack = createStackNavigator();
 

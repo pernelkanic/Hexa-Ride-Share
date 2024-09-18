@@ -2,10 +2,9 @@ import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from 'expo-location';
-import tw from 'twrnc'; // Tailwind import
+import tw from "twrnc"; // Tailwind import
 
-const LocationScreen = () => {
+const LocationScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -13,9 +12,12 @@ const LocationScreen = () => {
     const fetchLocation = async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          Alert.alert(
+            "Location Error",
+            "Permission to access location was denied"
+          );
           return;
         }
         const { coords } = await Location.getCurrentPositionAsync({
@@ -31,6 +33,10 @@ const LocationScreen = () => {
 
     fetchLocation();
   }, []);
+
+  const handleNext = () => {
+    navigation.navigate("RoleSelectionScreen"); // Navigate to RoleSelectionScreen
+  };
 
   if (!location && !errorMsg) {
     return (
@@ -62,6 +68,15 @@ const LocationScreen = () => {
           />
         )}
       </MapView>
+
+      <View style={tw`absolute bottom-0 left-0 right-0 p-4`}>
+        <TouchableOpacity
+          style={tw`bg-blue-600 rounded-lg py-3 items-center`}
+          onPress={handleNext}
+        >
+          <Text style={tw`text-white text-lg font-bold`}>Next</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
