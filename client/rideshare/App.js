@@ -8,6 +8,7 @@ import MapScreen from "./components/MapScreen";
 import ProfilePage from "./components/ProfilePage";
 import RideShareApp from "./components/RideShareApp";
 import RoleSelectionScreen from "./components/RoleSelectionScreen";
+import DriverHome from "./components/DriverComponents/DriverHome";
 
 const Stack = createStackNavigator();
 
@@ -46,7 +47,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="DriverHome" // Add this line to register DriverPage
+          name="DriverHome"
           component={DriverHome}
           options={{ headerShown: false }}
         />

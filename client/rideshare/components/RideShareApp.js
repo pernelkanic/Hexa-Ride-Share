@@ -11,23 +11,21 @@ const RideShareApp = () => {
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [time, setTime] = useState(new Date()); // Added time state
-  const [showTimePicker, setShowTimePicker] = useState(false); // Added time picker state
+  const [time, setTime] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [rides, setRides] = useState([]);
   const [filteredRides, setFilteredRides] = useState([]);
+  const [isFiltered, setIsFiltered] = useState(false); // Track if search is applied
   const navigation = useNavigation();
 
   // Fetch all rides when the app loads
   useEffect(() => {
     const fetchAllRides = async () => {
       try {
-        console.log('Fetching all rides...');
         const response = await axios.get('http://192.168.62.164:3000/api/rides'); // Use your machine's local IP address
-        console.log('Response:', response.data);
         setRides(response.data);
         setFilteredRides(response.data); // Initially show all rides
       } catch (error) {
-        console.error('Failed to fetch all rides:', error.response ? error.response.data : error.message);
         Alert.alert('Error', `Failed to fetch rides. Error: ${error.message}`);
       }
     };
@@ -42,23 +40,35 @@ const RideShareApp = () => {
     }
 
     try {
-      console.log('Searching for rides...');
-      console.log(`Pickup Location: ${pickupLocation}, Destination: ${destination}`);
-      console.log(`Date: ${date.toISOString()}, Time: ${time.toISOString()}`);
+      const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const formattedTime = time.toTimeString().split(' ')[0]; // Format time as HH:MM:SS
 
+      // Fetch all rides again and then filter locally
       const response = await axios.get('http://192.168.62.164:3000/api/rides', {
         params: {
-          pickupLocation,
-          destination,
-          date: date.toISOString(), // Include date in query params
-          time: time.toISOString(), // Include time in query params
+          date: formattedDate,
+          time: formattedTime,
         },
       });
 
-      console.log('Filtered rides:', response.data);
-      setFilteredRides(response.data); // Set filtered rides based on search
+      // Debugging: log API response
+      console.log('API Response:', response.data);
+
+      const filtered = response.data.filter((ride) =>
+        ride.origin.trim().toLowerCase().includes(pickupLocation.trim().toLowerCase()) &&
+        ride.destination.trim().toLowerCase().includes(destination.trim().toLowerCase())
+      );
+
+      // Debugging: log filtered results
+      console.log('Filtered Rides:', filtered);
+
+      setFilteredRides(filtered); // Update filtered rides based on search results
+      setIsFiltered(true); // Mark that search has been applied
+
+      if (filtered.length === 0) {
+        Alert.alert('No Results', 'No rides match your search criteria.');
+      }
     } catch (error) {
-      console.error('Search error:', error.response ? error.response.data : error.message);
       Alert.alert('Error', `Failed to fetch rides. Error: ${error.message}`);
     }
   };
@@ -155,22 +165,47 @@ const RideShareApp = () => {
       </View>
 
       <ScrollView style={tw`p-5`}>
-        <Text style={tw`text-lg font-bold mb-2`}>Available Rides</Text>
-        {filteredRides.length > 0 ? (
-          filteredRides.map((ride) => (
-            <View
-              key={ride.id}
-              style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
-            >
-              <Text style={tw`text-base`}>Driver Name: {ride.driver_name}</Text>
-              <Text style={tw`text-base`}>Vehicle Info: {ride.vehicle_info}</Text>
-              <Text style={tw`text-base`}>Origin: {ride.origin}</Text>
-              <Text style={tw`text-base`}>Destination: {ride.destination}</Text>
-              <Text style={tw`text-base`}>Available Seats: {ride.available_seats}</Text>
-            </View>
-          ))
+        {/* Show filtered rides if search has been applied */}
+        {isFiltered ? (
+          <>
+            <Text style={tw`text-lg font-bold mb-2`}>Filtered Rides</Text>
+            {filteredRides.length > 0 ? (
+              filteredRides.map((ride) => (
+                <View
+                  key={ride.id}
+                  style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
+                >
+                  <Text style={tw`text-base`}>Driver Name: {ride.driver_name}</Text>
+                  <Text style={tw`text-base`}>Vehicle Info: {ride.vehicle_info}</Text>
+                  <Text style={tw`text-base`}>Origin: {ride.origin}</Text>
+                  <Text style={tw`text-base`}>Destination: {ride.destination}</Text>
+                  <Text style={tw`text-base`}>Available Seats: {ride.available_seats}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={tw`text-center text-gray-500`}>No rides found for your search</Text>
+            )}
+          </>
         ) : (
-          <Text style={tw`text-center text-gray-500`}>No rides available</Text>
+          <>
+            <Text style={tw`text-lg font-bold mb-2`}>Available Rides</Text>
+            {rides.length > 0 ? (
+              rides.map((ride) => (
+                <View
+                  key={ride.id}
+                  style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
+                >
+                  <Text style={tw`text-base`}>Driver Name: {ride.driver_name}</Text>
+                  <Text style={tw`text-base`}>Vehicle Info: {ride.vehicle_info}</Text>
+                  <Text style={tw`text-base`}>Origin: {ride.origin}</Text>
+                  <Text style={tw`text-base`}>Destination: {ride.destination}</Text>
+                  <Text style={tw`text-base`}>Available Seats: {ride.available_seats}</Text>
+                </View>
+              ))
+            ) : (
+              <Text style={tw`text-center text-gray-500`}>No rides available</Text>
+            )}
+          </>
         )}
       </ScrollView>
     </SafeAreaView>
