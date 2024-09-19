@@ -51,16 +51,10 @@ const RideShareApp = () => {
         },
       });
 
-      // Debugging: log API response
-      console.log('API Response:', response.data);
-
       const filtered = response.data.filter((ride) =>
         ride.origin.trim().toLowerCase().includes(pickupLocation.trim().toLowerCase()) &&
         ride.destination.trim().toLowerCase().includes(destination.trim().toLowerCase())
       );
-
-      // Debugging: log filtered results
-      console.log('Filtered Rides:', filtered);
 
       setFilteredRides(filtered); // Update filtered rides based on search results
       setIsFiltered(true); // Mark that search has been applied
@@ -92,6 +86,10 @@ const RideShareApp = () => {
         setDestination(dest);
       },
     });
+  };
+
+  const handleRidePress = (ride) => {
+    navigation.navigate('AvailableRides', {  ride }); // Navigating to AvailableRides page
   };
 
   return (
@@ -171,16 +169,17 @@ const RideShareApp = () => {
             <Text style={tw`text-lg font-bold mb-2`}>Filtered Rides</Text>
             {filteredRides.length > 0 ? (
               filteredRides.map((ride) => (
-                <View
+                <TouchableOpacity
                   key={ride.id}
                   style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
+                  onPress={() => handleRidePress(ride)} // Navigate to ride details on press
                 >
                   <Text style={tw`text-base`}>Driver Name: {ride.driver_name}</Text>
                   <Text style={tw`text-base`}>Vehicle Info: {ride.vehicle_info}</Text>
                   <Text style={tw`text-base`}>Origin: {ride.origin}</Text>
                   <Text style={tw`text-base`}>Destination: {ride.destination}</Text>
                   <Text style={tw`text-base`}>Available Seats: {ride.available_seats}</Text>
-                </View>
+                </TouchableOpacity>
               ))
             ) : (
               <Text style={tw`text-center text-gray-500`}>No rides found for your search</Text>
@@ -191,16 +190,17 @@ const RideShareApp = () => {
             <Text style={tw`text-lg font-bold mb-2`}>Available Rides</Text>
             {rides.length > 0 ? (
               rides.map((ride) => (
-                <View
+                <TouchableOpacity
                   key={ride.id}
                   style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
+                  onPress={() => handleRidePress(ride)} // Navigate to ride details on press
                 >
                   <Text style={tw`text-base`}>Driver Name: {ride.driver_name}</Text>
                   <Text style={tw`text-base`}>Vehicle Info: {ride.vehicle_info}</Text>
                   <Text style={tw`text-base`}>Origin: {ride.origin}</Text>
                   <Text style={tw`text-base`}>Destination: {ride.destination}</Text>
                   <Text style={tw`text-base`}>Available Seats: {ride.available_seats}</Text>
-                </View>
+                </TouchableOpacity>
               ))
             ) : (
               <Text style={tw`text-center text-gray-500`}>No rides available</Text>
