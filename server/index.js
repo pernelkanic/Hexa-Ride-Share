@@ -59,6 +59,44 @@ app.post('/api/rides', (req, res) => {
   });
 });
 
+// POST request for the rider to request a ride
+app.post('/api/ride-requests', (req, res) => {
+  const { rider_name, gender, pickup_location, destination_location, contact } = req.body;
+
+  // Validate the request body
+  if (!rider_name || !gender || !pickup_location || !destination_location || !contact) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const sqlInsert = 'INSERT INTO ride_requests (rider_name, gender, pickup_location, destination_location, contact) VALUES (?, ?, ?, ?, ?)';
+  db.query(sqlInsert, [rider_name, gender, pickup_location, destination_location, contact], (err, result) => {
+    if (err) {
+      console.error('Error inserting ride request:', err);
+      res.status(500).json({ error: 'Failed to submit ride request' });
+    } else {
+      res.status(201).json({ message: 'Ride request created successfully', requestId: result.insertId });
+    }
+  });
+});
+
+
+// GET request for the driver to view ride requests
+app.get('/api/ride-requests', (req, res) => {
+  const sqlQuery = `
+    SELECT rider_name, gender, pickup_location, destination_location, contact 
+    FROM ride_requests`;
+
+  db.query(sqlQuery, (err, results) => {
+    if (err) {
+      console.error('Error fetching ride requests:', err);
+      res.status(500).json({ error: 'Failed to fetch ride requests' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

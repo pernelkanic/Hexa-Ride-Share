@@ -11,7 +11,7 @@ const RoleSelectionScreen = ({ navigation }) => {
 
   // Function to handle Driver selection
   const handleDriverSelect = () => {
-    navigation.navigate("DriverPage"); // Navigate to DriverPage
+    navigation.navigate("DriverHome"); // Navigate to DriverPage
   };
 
   return (
