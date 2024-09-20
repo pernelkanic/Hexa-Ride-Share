@@ -1,26 +1,87 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Animated,
+} from "react-native";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { Checkbox } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import Modal from "react-native-modal";
 import tw from "twrnc";
+import LottieView from "lottie-react-native"; // Import Lottie
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false); // Track success or error
+  const scaleAnim = useRef(new Animated.Value(0)).current; // Initialize animation value
+
   const navigation = useNavigation();
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleLogin = () => {
+  // Animation function
+  const startScaleAnimation = () => {
+    Animated.timing(scaleAnim, {
+      toValue: 1, // Scale to 1x
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleLogin = async () => {
     if (email && password) {
-      navigation.navigate("LocationScreen");
+      try {
+        const response = await fetch("http://192.168.29.122:3000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsSuccess(true);
+          setModalMessage("Login Successful!");
+          setIsModalVisible(true);
+          startScaleAnimation(); // Start success animation
+          setTimeout(() => {
+            setIsModalVisible(false);
+            navigation.navigate("LocationScreen"); // Navigate after delay
+          }, 1500);
+        } else {
+          setIsSuccess(false);
+          setModalMessage(data.error || "Login failed");
+          setIsModalVisible(true);
+          startScaleAnimation(); // Start error animation
+          setTimeout(() => setIsModalVisible(false), 1500);
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        setIsSuccess(false);
+        setModalMessage("An error occurred during login.");
+        setIsModalVisible(true);
+        startScaleAnimation();
+        setTimeout(() => setIsModalVisible(false), 1500);
+      }
     } else {
-      alert("Please enter your credentials");
+      setIsSuccess(false);
+      setModalMessage("Please enter your credentials.");
+      setIsModalVisible(true);
+      startScaleAnimation();
+      setTimeout(() => setIsModalVisible(false), 1500);
     }
   };
 
@@ -124,6 +185,46 @@ const Login = () => {
           <Text style={tw`text-white text-lg font-bold`}>LOGIN</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Success/Error Modal with Lottie Animation */}
+      <Modal
+        isVisible={isModalVisible}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+      >
+        <Animated.View
+          style={[
+            tw`p-10 bg-white rounded-lg justify-center items-center`,
+            {
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+        >
+          {isSuccess ? (
+            <LottieView
+              source={require("./assets/success.json")} // Lottie animation for success
+              autoPlay
+              loop={false}
+              style={{ width: 150, height: 150 }}
+            />
+          ) : (
+            <LottieView
+              source={require("./assets/error.json")} // Lottie animation for error
+              autoPlay
+              loop={false}
+              style={{ width: 150, height: 150 }}
+            />
+          )}
+          <Text
+            style={tw`text-lg font-bold mt-3 ${
+              isSuccess ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {isSuccess ? "Success" : "Error"}
+          </Text>
+          <Text style={tw`text-base`}>{modalMessage}</Text>
+        </Animated.View>
+      </Modal>
     </View>
   );
 };

@@ -97,6 +97,33 @@ app.get('/api/ride-requests', (req, res) => {
 });
 
 
+// POST request for user login
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+
+  // Validate request body
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Missing email or password' });
+  }
+
+  const sqlQuery = 'SELECT * FROM users WHERE email = ? AND password = ?';
+  
+  db.query(sqlQuery, [email, password], (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Failed to log in' });
+    }
+
+    if (results.length > 0) {
+      // Successful login, return user data or token
+      res.json({ message: 'Login successful', user: results[0] });
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
+    }
+  });
+});
+
+
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
