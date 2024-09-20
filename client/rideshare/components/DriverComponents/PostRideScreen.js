@@ -15,50 +15,44 @@ import {
 } from "react-native";
 import tw from "twrnc";
 
-const RideShareApp = () => {
+const PostRideScreen = () => {
   const [pickupLocation, setPickupLocation] = useState("");
   const [destination, setDestination] = useState("");
+  const [carNumber, setCarNumber] = useState(""); // Car Number state
+  const [seatsAvailable, setSeatsAvailable] = useState(""); // Seats Available state
+  const [carName, setCarName] = useState(""); // Car Name state
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [time, setTime] = useState(new Date()); // Added time state
-  const [showTimePicker, setShowTimePicker] = useState(false); // Added time picker state
+  const [time, setTime] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [rides, setRides] = useState([]);
   const [filteredRides, setFilteredRides] = useState([]);
   const navigation = useNavigation();
 
-  const exampleRides = [
-    { id: 1, driverName: "John Doe", gender: "Male", carType: "Sedan" },
-    { id: 2, driverName: "Jane Smith", gender: "Female", carType: "SUV" },
-  ];
-
   useEffect(() => {
     const fetchRides = async () => {
       try {
-       
-        const response = await axios.get(
-          "http://localhost:3000/api/rides",
-          {
-            params: {
-              pickupLocation,
-              destination,
-              date: date.toISOString(), 
-              time: time.toISOString(), 
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3000/api/rides", {
+          params: {
+            pickupLocation,
+            destination,
+            date: date.toISOString(),
+            time: time.toISOString(),
+          },
+        });
         setRides(response.data);
         setFilteredRides(response.data);
       } catch (error) {
         console.error(error);
-        setRides(exampleRides);
-        setFilteredRides(exampleRides);
+        setRides([]);
+        setFilteredRides([]);
       }
     };
 
     if (pickupLocation && destination) {
       fetchRides();
     }
-  }, [pickupLocation, destination, date, time]); 
+  }, [pickupLocation, destination, date, time]);
 
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -77,8 +71,6 @@ const RideShareApp = () => {
       Alert.alert("Error", "Please enter both pickup location and destination");
       return;
     }
-    // Simulate the fetch process
-    fetchRides();
   };
 
   const handleSelectOnMap = () => {
@@ -91,7 +83,8 @@ const RideShareApp = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-gray-100`}>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      {/* Header */}
       <View style={tw`bg-blue-600 p-4 flex-row justify-between items-center`}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="white" />
@@ -102,42 +95,47 @@ const RideShareApp = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={tw`bg-white p-5 m-4 rounded-lg shadow-lg`}>
-        <TextInput
-          style={tw`border border-gray-300 p-3 rounded mt-2`}
-          placeholder="Your current location"
-          value={pickupLocation}
-          onChangeText={setPickupLocation}
-        />
-        <TextInput
-          style={tw`border border-gray-300 p-3 rounded mt-2`}
-          placeholder="Destination"
-          value={destination}
-          onChangeText={setDestination}
-        />
-        <View style={tw`flex-row justify-between mt-2`}>
+      {/* Form Container */}
+      <View style={tw`bg-white p-5 m-4 rounded-lg shadow-lg flex-1`}>
+        <View style={tw`bg-white p-4 rounded-lg shadow`}>
+          <TextInput
+            style={tw`border-b border-gray-300 p-3`}
+            placeholder="Your Starting Point"
+            value={pickupLocation}
+            onChangeText={setPickupLocation}
+          />
+          <TextInput
+            style={tw`border-b border-gray-300 p-3`}
+            placeholder="Destination"
+            value={destination}
+            onChangeText={setDestination}
+          />
+        </View>
+
+        <View style={tw`flex-row justify-around mt-3`}>
           <TouchableOpacity
-            style={tw`flex-row items-center border border-gray-300 p-3 rounded`}
+            style={tw`flex-row items-center border border-gray-300 p-2 rounded`}
             onPress={handleSelectOnMap}
           >
             <FontAwesome name="map-marker" size={24} color="black" />
             <Text style={tw`ml-2`}>Select on Map</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={tw`flex-row items-center border border-gray-300 p-3 rounded`}
+            style={tw`flex-row items-center border border-gray-300 p-2 rounded`}
             onPress={() => setShowDatePicker(true)}
           >
             <FontAwesome name="calendar" size={24} color="black" />
             <Text style={tw`ml-2`}>Date</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={tw`flex-row items-center border border-gray-300 p-3 rounded`}
+            style={tw`flex-row items-center border border-gray-300 p-2 rounded`}
             onPress={() => setShowTimePicker(true)}
           >
             <FontAwesome name="clock-o" size={24} color="black" />
             <Text style={tw`ml-2`}>Time</Text>
           </TouchableOpacity>
         </View>
+
         {showDatePicker && (
           <DateTimePicker
             value={date}
@@ -155,45 +153,56 @@ const RideShareApp = () => {
           />
         )}
 
+        {/* Car Number Input */}
+        <TextInput
+          style={tw`border border-gray-300 p-3 rounded mt-3`}
+          placeholder="Car Number"
+          value={carNumber}
+          onChangeText={setCarNumber}
+        />
+
+        {/* Seats Available Input */}
+        <TextInput
+          style={tw`border border-gray-300 p-3 rounded mt-3`}
+          placeholder="Seats Available"
+          value={seatsAvailable}
+          onChangeText={setSeatsAvailable}
+          keyboardType="numeric"
+        />
+
+        {/* Car Name Input */}
+        <TextInput
+          style={tw`border border-gray-300 p-3 rounded mt-3`}
+          placeholder="Car Name"
+          value={carName}
+          onChangeText={setCarName}
+        />
+
+        {/* Post Ride Button */}
         <TouchableOpacity
-          style={tw`bg-blue-500 p-4 rounded mt-4`}
+          style={tw`bg-blue-600 p-4 mt-4 rounded-lg flex-row justify-center items-center`}
           onPress={handleSearch}
         >
-          <Text style={tw`text-white text-center text-lg`}>Search</Text>
+          <FontAwesome name="car" size={24} color="white" />
+          <Text style={tw`ml-2 text-white text-lg`}>Post Ride</Text>
         </TouchableOpacity>
-
-        <View style={tw`flex-row justify-around mt-4`}>
-          <TouchableOpacity style={tw`bg-gray-200 p-3 rounded`}>
-            <Text style={tw`text-black text-center`}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={tw`bg-gray-200 p-3 rounded`}>
-            <Text style={tw`text-black text-center`}>Office</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={tw`bg-gray-200 p-3 rounded`}>
-            <Text style={tw`text-black text-center`}>Others</Text>
-          </TouchableOpacity>
-        </View>
       </View>
 
-      <ScrollView style={tw`p-5`}>
-        <Text style={tw`text-lg font-bold mb-2`}>Upcoming Rides</Text>
-        {filteredRides.length > 0 ? (
-          filteredRides.map((ride) => (
-            <View
-              key={ride.id}
-              style={tw`bg-white p-4 mb-3 rounded-lg shadow-md`}
-            >
-              <Text style={tw`text-base`}>Driver Name: {ride.driverName}</Text>
-              <Text style={tw`text-base`}>Gender: {ride.gender}</Text>
-              <Text style={tw`text-base`}>Car Type: {ride.carType}</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={tw`text-base text-gray-500`}>No rides available</Text>
-        )}
-      </ScrollView>
+      {/* Bottom Navigation */}
+      <View
+        style={tw`absolute bottom-0 w-full bg-gray-200 flex-row justify-around p-5 border-t border-gray-300`}
+      >
+        <TouchableOpacity onPress={() => navigation.navigate("DriverHome")}>
+          <Ionicons name="home" size={24} color="black" />
+          <Text>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Ionicons name="person" size={24} color="black" />
+          <Text>Profile</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 
-export default RideShareApp;
+export default PostRideScreen;

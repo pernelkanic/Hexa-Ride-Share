@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import DriverHome from "./components/DriverHome"; // Import DriverPage
 import LocationScreen from "./components/LocationScreen";
 import Login from "./components/Login";
 import MapScreen from "./components/MapScreen";
@@ -9,6 +8,9 @@ import ProfilePage from "./components/ProfilePage";
 import RideShareApp from "./components/RideShareApp";
 import RoleSelectionScreen from "./components/RoleSelectionScreen";
 import DriverHome from "./components/DriverComponents/DriverHome";
+import AvailableRides from "./components/AvailableRides";
+import RideDetails from "./components/RideDetails";
+import PostRideScreen from "./components/DriverComponents/PostRideScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +53,21 @@ export default function App() {
           component={DriverHome}
           options={{ headerShown: false }}
         />
+         <Stack.Screen
+          name="AvailableRides"
+          component={AvailableRides}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="RideDetails"
+          component={RideDetails}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+         name="PostRideScreen"
+          component={PostRideScreen}
+          options={{ headerShown: false }}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );

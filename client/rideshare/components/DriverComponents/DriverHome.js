@@ -22,7 +22,7 @@ const DriverHome = () => {
       try {
         // Replace with your actual endpoint to get ride requests
         const response = await axios.get(
-          "http://192.168.62.164:3000/api/ride-requests"
+          "http://192.168.29.122:3000/api/ride-requests"
         );
         setRideRequests(response.data);
       } catch (error) {
